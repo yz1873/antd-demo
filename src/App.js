@@ -43,7 +43,7 @@ class App extends Component {
         let formData = new FormData();
         formData.append('ip',this.state.mysqlip);
 
-        fetch('http://192.168.91.130:8080/ansible//installmysql', {
+        fetch('http://192.168.91.130:8080/ansible/installmysql', {
             method: 'POST',
             body: formData,
         }).then(response => response.json())
