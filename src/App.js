@@ -114,24 +114,24 @@ class App extends Component {
                 <Button type="primary" onClick={this.getHostList}>
                     获取主机列表
                 </Button>
-                <Button type="primary" loading={this.state.pushloading} onClick={this.pushRsa}>
-                    推送公钥给所有主机
-                </Button>
-                <input value={this.state.mysqlip} onChange={this.mysqlIpChange}/>
-                <Button type="primary" loading={this.state.mysqlinstallloading} onClick={this.installMysql}>
-                    部署MySQL
-                </Button>
-                <div>
-                    {this.state.pushinfo}
-                </div>
-                <div>
-                    {this.state.mysqlinfo}
-                </div>
                 <Collapse accordion>
                     <Panel header="主机列表" key="1">
                         <p>{this.state.hostlist}</p>
                     </Panel>
                 </Collapse>
+                <Button className="Button" type="primary" loading={this.state.pushloading} onClick={this.pushRsa}>
+                    推送公钥给所有主机
+                </Button>
+                <div className="Info">
+                    {this.state.pushinfo}
+                </div>
+                <input placeholder="输入要部署MySQL的主机IP"  value={this.state.mysqlip} onChange={this.mysqlIpChange}/>
+                <Button type="primary" loading={this.state.mysqlinstallloading} onClick={this.installMysql}>
+                    部署MySQL
+                </Button>
+                <div>
+                    {this.state.mysqlinfo}
+                </div>
             </div>
         );
     }
