@@ -86,7 +86,8 @@ class App extends Component {
             .then(data => {
                 if (data.code === 0) {
                     this.setState({
-                        mysqlinfo: '账号：' + data.data.username + ' 密码：' + data.data.password,
+                        mysqlinfo: 'root密码：' + data.data.password +
+                        ' 用户账号：' + data.data.newusername + ' 用户密码：' + data.data.newpassword,
                         mysqlinstallloading: false
                     })
                 }
@@ -125,7 +126,7 @@ class App extends Component {
                 <div className="Info">
                     {this.state.pushinfo}
                 </div>
-                <input placeholder="输入要部署MySQL的主机IP"  value={this.state.mysqlip} onChange={this.mysqlIpChange}/>
+                <input placeholder="输入要部署MySQL的主机IP" value={this.state.mysqlip} onChange={this.mysqlIpChange}/>
                 <Button type="primary" loading={this.state.mysqlinstallloading} onClick={this.installMysql}>
                     部署MySQL
                 </Button>
