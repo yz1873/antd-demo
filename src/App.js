@@ -15,6 +15,10 @@ class App extends Component {
         mysqlip: '',
         mysqlinfo: '',
         hostlist: '',
+        mysqlmasterip: '',
+        mysqlslaveip: '',
+        mysqlinstallmasterloading: false,
+        mysqlmasterinfo: '',
     }
 
     /**
@@ -77,7 +81,7 @@ class App extends Component {
         this.setState({mysqlinstallloading: true});
 
         let formData = new FormData();
-        formData.append('ip', this.state.mysqlip);
+        formData.append('ip', this.state.mysqlip.trim());
 
         fetch('http://192.168.91.130:8080/ansible/install_mysql', {
             method: 'POST',
@@ -106,6 +110,44 @@ class App extends Component {
 
 
     /**
+     * mysql主从安装
+     */
+    installMandSMysql = () => {
+        this.setState({mysqlinstallmasterloading: true});
+
+        let formData = new FormData();
+        formData.append('ip1', this.state.mysqlmasterip.trim());
+        formData.append('ip2', this.state.mysqlslaveip.trim());
+
+        fetch('http://192.168.91.130:8080/ansible/install_mysql_masterandslave', {
+            method: 'POST',
+            body: formData,
+        }).then(response => response.json())
+            .then(data => {
+                if (data.code === 0) {
+                    this.setState({
+                        mysqlmasterinfo: '主节点账号：' + data.data.username + '主节点密码：' + data.data.password +
+                        ' 从节点账号：' + data.data.newusername + ' 从节点密码：' + data.data.newpassword,
+                        mysqlinstallmasterloading: false
+                    })
+                }
+                else {
+                    this.setState({
+                        mysqlmasterinfo: data.msg,
+                        mysqlinstallmasterloading: false
+                    })
+                }
+            })
+            .catch(e => console.log("Oops, error", e))
+    }
+    mysqlMasterIpChange = (e) => {
+        this.setState({mysqlmasterip: e.target.value});
+    }
+    mysqlSlaveIpChange = (e) => {
+        this.setState({mysqlslaveip: e.target.value});
+    }
+
+    /**
      * 页面
      * @returns {*}
      */
@@ -132,6 +174,16 @@ class App extends Component {
                 </Button>
                 <div>
                     {this.state.mysqlinfo}
+                </div>
+                <input placeholder="输入作为MySQL主节点的主机IP" value={this.state.mysqlmasterip}
+                       onChange={this.mysqlMasterIpChange}/>
+                <input placeholder="输入作为MySQL从节点的主机IP" value={this.state.mysqlslaveip}
+                       onChange={this.mysqlSlaveIpChange}/>
+                <Button type="primary" loading={this.state.mysqlinstallmasterloading} onClick={this.installMandSMysql}>
+                    部署主从结构MySQL
+                </Button>
+                <div>
+                    {this.state.mysqlmasterinfo}
                 </div>
             </div>
         );
